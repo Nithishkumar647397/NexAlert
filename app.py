@@ -98,27 +98,37 @@ def search_runbook(query_text: str) -> Optional[Dict]:
 
 def generate_insights(incident_alerts: List[Alert], runbook: Optional[Dict]) -> tuple[str, str]:
     if not client:
-        return "No API Key provided.", "No API Key provided."
+        return "[Insights unavailable: API Key missing or invalid]", "[Recommendation unavailable]"
 
     # Generate Explanation
     alert_details = "\\n".join([f"- {a.alert_type} on {a.device_id}: {a.message}" for a in incident_alerts])
     explanation_prompt = f"Explain in 1-2 sentences why these overlapping alerts were grouped into one incident:\\n{alert_details}"
     
-    explanation_resp = client.models.generate_content(
-        model='gemini-2.5-flash',
-        contents=explanation_prompt
-    )
-    explanation = explanation_resp.text.strip()
+    explanation = "[Explanation unavailable: model call failed]"
+    try:
+        explanation_resp = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=explanation_prompt
+        )
+        if explanation_resp.text:
+            explanation = explanation_resp.text.strip()
+    except Exception as e:
+        print(f"Gemini Explanation Error: {e}")
 
     # Generate Recommendation
     recommendation = None
     if runbook:
+        recommendation = "[Recommendation unavailable: model call failed]"
         rec_prompt = f"Based strictly on this runbook content, provide a short, plain-language recommendation for the user. Do not invent steps.\\nRunbook: {runbook['content']}"
-        rec_resp = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=rec_prompt
-        )
-        recommendation = rec_resp.text.strip()
+        try:
+            rec_resp = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=rec_prompt
+            )
+            if rec_resp.text:
+                recommendation = rec_resp.text.strip()
+        except Exception as e:
+            print(f"Gemini Recommendation Error: {e}")
 
     return explanation, recommendation
 
@@ -171,6 +181,11 @@ def correlate_alerts(alerts: List[Alert]) -> List[Dict[str, Any]]:
 
 @app.post("/api/triage")
 async def triage_alerts(req: TriageRequest):
+    if not client:
+        raise HTTPException(
+            status_code=503, 
+            detail="Service Unavailable: GEMINI_API_KEY is missing or invalid. Please check your .env file."
+        )
     incidents = correlate_alerts(req.alerts)
     return {"incidents": incidents}
 
