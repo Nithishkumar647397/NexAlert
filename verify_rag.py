@@ -28,8 +28,6 @@ if not api_key:
 
 client = genai.Client()
 
-dimension = 768
-index = faiss.IndexFlatL2(dimension)
 runbooks_db = []
 
 print("Loading and indexing runbooks...")
@@ -42,6 +40,11 @@ response = client.models.embed_content(
     contents=texts
 )
 embeddings = np.array([emb.values for emb in response.embeddings]).astype('float32')
+
+print(f"Embeddings shape: {embeddings.shape}")
+dimension = embeddings.shape[1]
+index = faiss.IndexFlatL2(dimension)
+
 index.add(embeddings)
 print(f"Indexed {index.ntotal} runbooks.\n")
 
