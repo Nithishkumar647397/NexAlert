@@ -21,11 +21,10 @@ app.mount("/data", StaticFiles(directory="data"), name="data")
 
 # Gemini Setup
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-client = genai.Client() if GEMINI_API_KEY else None
+client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 # FAISS Setup
-dimension = 768 # gemini-embedding-001 dimension
-index = faiss.IndexFlatL2(dimension)
+index = None
 runbooks_db = []
 
 def load_runbooks_and_index():
@@ -45,6 +44,10 @@ def load_runbooks_and_index():
                 contents=texts
             )
             embeddings = np.array([emb.values for emb in response.embeddings]).astype('float32')
+            
+            dimension = embeddings.shape[1]
+            index = faiss.IndexFlatL2(dimension)
+            
             index.add(embeddings)
             print(f"Indexed {len(texts)} runbooks into FAISS.")
     except Exception as e:

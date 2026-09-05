@@ -26,7 +26,7 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     print("WARNING: GEMINI_API_KEY environment variable is not set. The API call will fail if the client doesn't pick it up otherwise.")
 
-client = genai.Client()
+client = genai.Client(api_key=api_key)
 
 runbooks_db = []
 
