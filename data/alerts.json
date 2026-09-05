@@ -1,0 +1,58 @@
+[
+  {
+    "alert_id": "a1",
+    "device_id": "router-core-ny-01",
+    "alert_type": "link_down",
+    "severity": "critical",
+    "timestamp": "2026-09-05T09:40:00Z",
+    "message": "Interface xe-0/0/0 went down."
+  },
+  {
+    "alert_id": "a2",
+    "device_id": "router-core-ny-01",
+    "alert_type": "device_unreachable",
+    "severity": "critical",
+    "timestamp": "2026-09-05T09:40:05Z",
+    "message": "No ping response from management IP."
+  },
+  {
+    "alert_id": "a3",
+    "device_id": "router-core-ny-01",
+    "alert_type": "packet_loss",
+    "severity": "error",
+    "timestamp": "2026-09-05T09:40:07Z",
+    "message": "100% packet loss detected by neighbor router."
+  },
+  {
+    "alert_id": "a4",
+    "device_id": "switch-edge-sf-02",
+    "alert_type": "high_latency",
+    "severity": "warning",
+    "timestamp": "2026-09-05T09:45:00Z",
+    "message": "Latency exceeded 150ms on uplink."
+  },
+  {
+    "alert_id": "a5",
+    "device_id": "switch-edge-sf-02",
+    "alert_type": "queue_drops",
+    "severity": "warning",
+    "timestamp": "2026-09-05T09:45:02Z",
+    "message": "Tail drops observed on egress queue 3."
+  },
+  {
+    "alert_id": "a6",
+    "device_id": "loadbalancer-01",
+    "alert_type": "high_cpu",
+    "severity": "warning",
+    "timestamp": "2026-09-05T09:50:00Z",
+    "message": "CPU usage spiked to 85% for 1 minute."
+  },
+  {
+    "alert_id": "a7",
+    "device_id": "firewall-dmz-01",
+    "alert_type": "unknown_error",
+    "severity": "error",
+    "timestamp": "2026-09-05T09:51:00Z",
+    "message": "Unidentified process crash."
+  }
+]

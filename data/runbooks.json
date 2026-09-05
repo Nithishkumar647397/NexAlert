@@ -1,0 +1,20 @@
+[
+  {
+    "id": "rb-001",
+    "title": "Core Router Link Failure & Unreachable",
+    "content": "When a core router reports both a link down and device unreachable state, along with packet loss from neighbors, it typically indicates a hard physical failure or power loss to the line card. Verify power status via Out-Of-Band (OOB) management. If OOB is unreachable, dispatch field technician immediately to check physical connections and power supplies. Do not attempt to reboot remotely without verifying physical status to avoid data corruption.",
+    "tags": ["core", "router", "link-down", "unreachable"]
+  },
+  {
+    "id": "rb-002",
+    "title": "Edge Switch High Latency",
+    "content": "High latency on edge switches without accompanying packet loss or link down events often points to localized microbursts or a saturated uplink due to an unshaped traffic flow. Check QoS queues and interface counters for tail drops. Implement rate-limiting on the offending customer port or reroute non-critical traffic to secondary links.",
+    "tags": ["edge", "switch", "latency", "qos"]
+  },
+  {
+    "id": "rb-003",
+    "title": "BGP Peer Flapping",
+    "content": "If a BGP peer is rapidly flapping, check the MTU size on the interface and ensure it matches the peer. Verify if there are any intermediate Layer 2 transport issues causing keepalive drops. Consider increasing the hold-time temporarily if transport is known to be unstable during maintenance.",
+    "tags": ["bgp", "flapping", "routing"]
+  }
+]
