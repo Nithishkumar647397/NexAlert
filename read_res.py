@@ -1,6 +1,6 @@
 import json
 
-with open('triage_result.json', encoding='utf-8-sig') as f:
+with open('triage_result.json', encoding='utf-16le') as f:
     data = json.load(f)
 
 incidents = [i for i in data['incidents'] if len(i['alerts']) > 1]
