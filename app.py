@@ -77,7 +77,7 @@ def get_severity_score(severity: str) -> int:
     return mapping.get(severity.lower(), 0)
 
 def search_runbook(query_text: str) -> Optional[Dict]:
-    if not client or index.ntotal == 0:
+    if not client or index is None or index.ntotal == 0:
         return None
     
     response = client.models.embed_content(
