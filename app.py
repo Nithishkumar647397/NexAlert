@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+# pyrefly: ignore [missing-import]
 import faiss
 import numpy as np
 from typing import List, Dict, Any, Optional
@@ -16,6 +17,7 @@ app = FastAPI(title="NexAlert API")
 # Setup static files for frontend
 os.makedirs("static", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
 # Gemini Setup
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")

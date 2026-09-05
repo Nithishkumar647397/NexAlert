@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAlert | Incident Triage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header glass">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">NexAlert</span>
+            </div>
+            <div class="header-actions">
+                <button id="btn-simulate" class="btn primary">Simulate Alert Storm</button>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <section class="panel-section alerts-section">
+                <div class="section-header">
+                    <h2>Incoming Alerts</h2>
+                    <span class="badge" id="alert-count">0</span>
+                </div>
+                <div class="alerts-container" id="alerts-container">
+                    <div class="empty-state">Waiting for alerts...</div>
+                </div>
+            </section>
+
+            <section class="panel-section incidents-section">
+                <div class="section-header">
+                    <h2>Triaged Incidents</h2>
+                    <span class="badge" id="incident-count">0</span>
+                </div>
+                <div class="incidents-container" id="incidents-container">
+                    <div class="empty-state">No incidents detected.</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Templates -->
+    <template id="tpl-alert">
+        <div class="alert-card glass animate-in">
+            <div class="alert-header">
+                <span class="alert-device"></span>
+                <span class="alert-severity"></span>
+            </div>
+            <div class="alert-body">
+                <p class="alert-type"></p>
+                <p class="alert-message"></p>
+            </div>
+            <div class="alert-footer">
+                <span class="alert-time"></span>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-incident">
+        <div class="incident-card glass animate-in">
+            <div class="incident-header">
+                <div class="incident-title-group">
+                    <h3 class="incident-device"></h3>
+                    <span class="incident-priority"></span>
+                </div>
+                <span class="incident-status"></span>
+            </div>
+            
+            <div class="incident-body">
+                <div class="incident-section">
+                    <h4>Correlated Alerts (<span class="corr-count"></span>)</h4>
+                    <p class="incident-explanation text-muted"></p>
+                </div>
+                
+                <div class="incident-section runbook-section">
+                    <h4>Recommended Action</h4>
+                    <div class="runbook-content">
+                        <div class="runbook-header">
+                            <span class="runbook-icon">📚</span>
+                            <span class="runbook-title"></span>
+                        </div>
+                        <p class="runbook-recommendation"></p>
+                    </div>
+                    <div class="escalate-banner" style="display: none;">
+                        <span class="escalate-icon">⚠️</span>
+                        <span>No runbook match. Escalate immediately.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
