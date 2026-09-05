@@ -20,7 +20,7 @@ print(f"Noise Count: {len(noise)}")
 print("---INCIDENTS---")
 for i in incidents:
     print(f"ID: {i['device_id']}")
-    print(f"Priority: {i['priority']}")
+    print(f"Priority (Severity Score): {i.get('severity_score')}")
     print(f"Status: {i['status']}")
     print(f"Runbook: {i.get('runbook_id')} - {i.get('runbook_title')}")
     print(f"Rec: {i.get('recommendation')}")
