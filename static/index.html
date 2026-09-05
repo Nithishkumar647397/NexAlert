@@ -207,20 +207,111 @@
                     </div>
                 </div>
 
-                <!-- VIEW: RUNBOOKS / SETTINGS Placeholder -->
+                <!-- VIEW: RUNBOOKS -->
                 <div id="view-runbooks" class="view-section">
-                    <div class="empty-state" style="margin-top: 10vh;">
-                        <i class="fas fa-book-open" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
-                        <h2>Runbook Library</h2>
-                        <p class="text-muted">Manage automated response procedures and escalation paths.</p>
+                    <div class="section-title-row">
+                        <div class="section-title">
+                            <h2>Runbook Library</h2>
+                        </div>
+                        <div class="search-box" style="width: 250px;">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search runbooks...">
+                        </div>
+                    </div>
+                    
+                    <div class="incidents-grid">
+                        <div class="incident-card" style="border-top: 4px solid var(--border-strong);">
+                            <div class="incident-header">
+                                <div class="badge-device"><i class="fas fa-book"></i> rb-001</div>
+                                <div class="incident-time"><span class="dot-success"></span> ACTIVE</div>
+                            </div>
+                            <h3 class="incident-title">Core Router Link Failure & Unreachable</h3>
+                            <p class="incident-desc">When a core router reports both a link down and device unreachable state, along with packet loss from neighbors, it typically indicates a hard physical failure or power loss to the line card. Verify power status via Out-Of-Band (OOB) management...</p>
+                            <div class="incident-tags" style="margin-bottom: 1rem;">
+                                <span class="badge-severity" style="background:var(--border-subtle); color:var(--text-primary)">core</span>
+                                <span class="badge-severity" style="background:var(--border-subtle); color:var(--text-primary)">router</span>
+                            </div>
+                            <button class="btn-investigate" style="width: 100%; text-align: center;">Edit Procedure</button>
+                        </div>
+
+                        <div class="incident-card" style="border-top: 4px solid var(--border-strong);">
+                            <div class="incident-header">
+                                <div class="badge-device"><i class="fas fa-book"></i> rb-004</div>
+                                <div class="incident-time"><span class="dot-success"></span> ACTIVE</div>
+                            </div>
+                            <h3 class="incident-title">Authentication Failure Burst</h3>
+                            <p class="incident-desc">A sudden burst of authentication failures on a VPN concentrator or RADIUS server usually indicates either a credential stuffing attack, a misconfigured client rolling out, or an expired backend certificate. Verify if the failures are from a single source IP or distributed...</p>
+                            <div class="incident-tags" style="margin-bottom: 1rem;">
+                                <span class="badge-severity" style="background:var(--border-subtle); color:var(--text-primary)">auth</span>
+                                <span class="badge-severity" style="background:var(--border-subtle); color:var(--text-primary)">security</span>
+                            </div>
+                            <button class="btn-investigate" style="width: 100%; text-align: center;">Edit Procedure</button>
+                        </div>
+                        
+                        <div class="incident-card" style="border-top: 4px solid var(--border-strong); opacity: 0.7;">
+                            <div class="incident-header">
+                                <div class="badge-device"><i class="fas fa-book"></i> rb-002</div>
+                                <div class="incident-time"><span class="dot" style="background:var(--text-muted)"></span> DRAFT</div>
+                            </div>
+                            <h3 class="incident-title">Edge Switch High Latency</h3>
+                            <p class="incident-desc">High latency on edge switches without accompanying packet loss or link down events often points to localized microbursts or a saturated uplink due to an unshaped traffic flow...</p>
+                            <button class="btn-investigate" style="width: 100%; text-align: center; background:transparent; border-color:var(--border-strong); color:var(--text-primary)">Continue Editing</button>
+                        </div>
                     </div>
                 </div>
                 
+                <!-- VIEW: SETTINGS -->
                 <div id="view-settings" class="view-section">
-                    <div class="empty-state" style="margin-top: 10vh;">
-                        <i class="fas fa-cogs" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-                        <h2>System Settings</h2>
-                        <p class="text-muted">Configure clustering thresholds, AI model parameters, and API keys.</p>
+                    <div class="section-title-row">
+                        <div class="section-title">
+                            <h2>System Settings</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="settings-panel">
+                            <h3><i class="fas fa-brain text-purple" style="color: var(--accent); margin-right: 0.5rem;"></i> AI Model Configuration</h3>
+                            <div class="setting-item mt-4">
+                                <label>Active Language Model</label>
+                                <select class="settings-input">
+                                    <option>gemini-3.6-flash (Current)</option>
+                                    <option>gemini-3.6-pro</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Model Timeout (ms)</label>
+                                <input type="number" class="settings-input" value="7000">
+                            </div>
+                            <div class="setting-item">
+                                <label>API Key</label>
+                                <input type="password" class="settings-input" value="********************************">
+                            </div>
+                            <button class="btn-primary mt-4" style="width: 100%">Save AI Config</button>
+                        </div>
+
+                        <div class="settings-panel">
+                            <h3><i class="fas fa-project-diagram text-success" style="color: var(--success); margin-right: 0.5rem;"></i> Clustering Engine</h3>
+                            <div class="setting-item mt-4">
+                                <label>FAISS L2 Distance Threshold</label>
+                                <input type="number" step="0.1" class="settings-input" value="0.6">
+                            </div>
+                            <div class="setting-item">
+                                <label>Time Window Grouping</label>
+                                <select class="settings-input">
+                                    <option>10 minutes</option>
+                                    <option>5 minutes</option>
+                                </select>
+                            </div>
+                            <div class="setting-toggle mt-4" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-nav); border-radius: 8px;">
+                                <div>
+                                    <strong style="display:block;">Auto-Escalate Unknowns</strong>
+                                    <span class="text-muted" style="font-size: 0.8rem;">Route unclassified anomalies to human triage instantly</span>
+                                </div>
+                                <div class="toggle-switch active" style="width: 44px; height: 24px; background: var(--success); border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
