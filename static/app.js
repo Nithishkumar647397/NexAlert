@@ -7,6 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let mockAlerts = [];
 
+    // Theme Toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+        });
+    }
+
     // Format time helper
     const formatTime = (isoString) => {
         const d = new Date(isoString);
