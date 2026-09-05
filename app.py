@@ -107,7 +107,7 @@ def generate_insights(incident_alerts: List[Alert], runbook: Optional[Dict]) -> 
     explanation = "[Explanation unavailable: model call failed]"
     try:
         explanation_resp = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-3.6-flash',
             contents=explanation_prompt
         )
         if explanation_resp.text:
@@ -122,7 +122,7 @@ def generate_insights(incident_alerts: List[Alert], runbook: Optional[Dict]) -> 
         rec_prompt = f"Based strictly on this runbook content, provide a short, plain-language recommendation for the user. Do not invent steps.\\nRunbook: {runbook['content']}"
         try:
             rec_resp = client.models.generate_content(
-                model='gemini-1.5-flash',
+                model='gemini-3.6-flash',
                 contents=rec_prompt
             )
             if rec_resp.text:
