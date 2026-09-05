@@ -1,114 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const btnSimulate = document.getElementById('btn-simulate');
-    const alertsContainer = document.getElementById('alerts-container');
-    const incidentsContainer = document.getElementById('incidents-container');
-    const alertCount = document.getElementById('alert-count');
-    const incidentCount = document.getElementById('incident-count');
-
-    let mockAlerts = [];
-
-    // Theme Toggle
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', next);
-        });
-    }
-
-    // Format time helper
-    const formatTime = (isoString) => {
-        const d = new Date(isoString);
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    };
-
-    // Render a single alert
-    const renderAlert = (alert, delay) => {
-        const tpl = document.getElementById('tpl-alert').content.cloneNode(true);
-        const card = tpl.querySelector('.alert-card');
-        
-        card.style.animationDelay = `${delay}ms`;
-        
-        tpl.querySelector('.alert-device').textContent = alert.device_id;
-        
-        const sevBadge = tpl.querySelector('.alert-severity');
-        sevBadge.textContent = alert.severity;
-        sevBadge.className = `severity-badge sev-${alert.severity}`;
-        
-        tpl.querySelector('.alert-type').textContent = alert.alert_type;
-        tpl.querySelector('.alert-message').textContent = alert.message;
-        tpl.querySelector('.alert-time').textContent = formatTime(alert.timestamp);
-        
-        alertsContainer.appendChild(tpl);
-    };
-
-    // Render a single incident
-    const renderIncident = (incident, delay) => {
-        const tpl = document.getElementById('tpl-incident').content.cloneNode(true);
-        const card = tpl.querySelector('.incident-card');
-        
-        card.style.animationDelay = `${delay}ms`;
-        
-        // Priority styling
-        let priorityClass = 'priority-info';
-        if (incident.priority_score >= 100) priorityClass = 'priority-critical';
-        else if (incident.priority_score >= 50) priorityClass = 'priority-error';
-        else if (incident.priority_score >= 10) priorityClass = 'priority-warning';
-        card.classList.add(priorityClass);
-
-        tpl.querySelector('.incident-device').textContent = incident.device_id;
-        tpl.querySelector('.incident-priority').textContent = `Score: ${incident.priority_score}`;
-        
-        const statusBadge = tpl.querySelector('.incident-status');
-        if (incident.is_noise) {
-            statusBadge.textContent = 'NOISE';
-            statusBadge.className = 'status-badge status-noise';
-        } else {
-            statusBadge.textContent = incident.escalate ? 'ESCALATE' : 'TRIAGED';
-            statusBadge.className = 'status-badge status-triage';
-            if (incident.escalate) statusBadge.style.color = '#fca5a5';
-        }
-
-        tpl.querySelector('.corr-count').textContent = incident.alerts.length;
-        tpl.querySelector('.incident-explanation').textContent = incident.explanation || 'Isolated event, filtered as noise.';
-
-        // Runbook / Escalate section
-        const runbookSection = tpl.querySelector('.runbook-section');
-        const escalateBanner = tpl.querySelector('.escalate-banner');
-        const runbookContent = tpl.querySelector('.runbook-content');
-
-        if (incident.is_noise) {
-            runbookSection.style.display = 'none';
-        } else if (incident.escalate) {
-            runbookContent.style.display = 'none';
-            escalateBanner.style.display = 'flex';
-        } else {
-            tpl.querySelector('.runbook-title').textContent = incident.runbook_title;
-            tpl.querySelector('.runbook-recommendation').textContent = incident.recommendation;
-        }
-        
-        incidentsContainer.appendChild(tpl);
-    };
-
-    // Main action
+    // We auto-run triage
     const runTriage = async () => {
-        btnSimulate.disabled = true;
-        btnSimulate.innerHTML = '<span class="loader"></span> Triaging...';
-        
-        alertsContainer.innerHTML = '';
-        incidentsContainer.innerHTML = '';
-        
         try {
             const response = await fetch('/data/alerts.json');
             if (!response.ok) throw new Error("Could not fetch alerts.json");
-            mockAlerts = await response.json();
+            const mockAlerts = await response.json();
             
-            // Render alerts with stagger
-            alertCount.textContent = mockAlerts.length;
-            mockAlerts.forEach((alert, i) => renderAlert(alert, i * 100));
+            // Set basic stats
+            document.getElementById('stat-total').textContent = mockAlerts.length;
+            document.getElementById('pipe-in').textContent = mockAlerts.length;
 
-            // 2. Send to backend for triage
             const triageRes = await fetch('/api/triage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -118,22 +19,86 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!triageRes.ok) throw new Error("Triage failed");
             const data = await triageRes.json();
             
-            // Render incidents
-            const incidents = data.incidents || [];
-            incidentCount.textContent = incidents.length;
-            incidents.forEach((inc, i) => renderIncident(inc, i * 150));
+            // Process incidents
+            const allIncidents = data.incidents || [];
+            const incidents = allIncidents.filter(inc => !inc.is_noise);
+            const noise = allIncidents.filter(inc => inc.is_noise);
+            
+            // Stats
+            document.getElementById('stat-active').textContent = incidents.length.toString().padStart(2, '0');
+            const critCount = incidents.filter(i => i.priority_score >= 50).length;
+            document.getElementById('stat-crit').textContent = critCount.toString().padStart(2, '0');
+            document.getElementById('stat-noise').textContent = noise.length.toString().padStart(2, '0');
+            
+            document.getElementById('pipe-inc').textContent = incidents.length;
+            document.getElementById('pipe-noise').textContent = noise.length;
+            
+            document.getElementById('req-action-count').textContent = critCount;
+
+            const incidentsContainer = document.getElementById('incidents-container');
+            incidentsContainer.innerHTML = '';
+            
+            incidents.forEach((inc, i) => {
+                const tpl = document.getElementById('tpl-incident').content.cloneNode(true);
+                const card = tpl.querySelector('.incident-card');
+                
+                card.style.animationDelay = `${i * 150}ms`;
+                
+                let severityText = 'MEDIUM';
+                let sevClass = 'sev-medium';
+                if (inc.priority_score >= 100) {
+                    severityText = 'CRITICAL';
+                    sevClass = 'sev-critical';
+                } else if (inc.priority_score >= 50) {
+                    severityText = 'HIGH SEV';
+                    sevClass = 'sev-high';
+                }
+                
+                card.classList.add(sevClass);
+                tpl.querySelector('.severity-text').textContent = severityText;
+                tpl.querySelector('.badge-device').textContent = inc.device_id;
+                
+                // Format time using first alert
+                const d = new Date(inc.alerts[0].timestamp);
+                tpl.querySelector('.time-text').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' AM'; // Mock AM/PM for aesthetic
+                
+                // Set Title
+                if (inc.runbook_title) {
+                    tpl.querySelector('.incident-title').textContent = inc.runbook_title;
+                } else {
+                    tpl.querySelector('.incident-title').textContent = inc.alerts[0].alert_type.replace('_', ' ').toUpperCase();
+                }
+                
+                // Set Desc
+                tpl.querySelector('.incident-desc').textContent = inc.explanation.substring(0, 80) + '...';
+                
+                tpl.querySelector('.corr-count').textContent = inc.alerts.length;
+                
+                const actionContainer = tpl.querySelector('.incident-actions');
+                
+                if (inc.escalate) {
+                    // It's escalated
+                    tpl.querySelector('.status-val').innerHTML = '<span class="dot-red"></span> Escalated';
+                    tpl.querySelector('.runbook-name').textContent = 'No Runbook - Escalated';
+                    tpl.querySelector('.runbook-link').style.color = '#ef4444';
+                } else {
+                    tpl.querySelector('.runbook-name').textContent = `Runbook ${inc.runbook_id || '#NET-000'}`;
+                }
+                
+                incidentsContainer.appendChild(tpl);
+            });
+            
+            // Noise section
+            if (noise.length > 0) {
+                document.getElementById('noise-section').style.display = 'block';
+                document.getElementById('noise-count').textContent = noise.length;
+                document.getElementById('btn-noise-count').textContent = noise.length;
+            }
 
         } catch (error) {
             console.error(error);
-            alert("Error: " + error.message);
-        } finally {
-            btnSimulate.disabled = false;
-            btnSimulate.textContent = 'Simulate Alert Storm';
         }
     };
 
-    btnSimulate.addEventListener('click', runTriage);
-    
-    // Automatically run on startup
     runTriage();
 });
