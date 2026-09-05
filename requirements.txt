@@ -1,6 +1,6 @@
-google-genai==0.3.0
-faiss-cpu==1.10.0
-fastapi==0.115.6
-uvicorn==0.34.0
-numpy==2.0.2
-pydantic==2.10.4
+google-genai
+faiss-cpu
+fastapi
+uvicorn
+numpy
+pydantic
