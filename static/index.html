@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,211 +7,225 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/index.css?v=2">
+    <link rel="stylesheet" href="/static/index.css?v=3">
 </head>
 <body>
     <div class="app-container">
-        <!-- Top Navbar -->
-        <header class="navbar">
-            <div class="nav-left">
-                <div class="logo">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                    <div class="logo-text">
-                        <div class="logo-title">NexAlert <span class="badge-noc">NOC<br>ONLINE</span></div>
-                        <div class="logo-subtitle">NETWORK OVERVIEW</div>
-                    </div>
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <div class="logo-text">
+                    <div class="logo-title">NexAlert</div>
                 </div>
             </div>
-            <div class="nav-right">
-                <i class="fas fa-search nav-icon"></i>
-                <div class="nav-toggle">
-                    <i class="fas fa-sync-alt"></i> 24h
-                </div>
-                <div class="nav-notification">
-                    <i class="far fa-bell nav-icon"></i>
-                    <span class="notification-dot"></span>
-                </div>
-                <div class="avatar">
-                    <i class="far fa-user"></i>
-                </div>
+            <div class="nav-links">
+                <a href="#" class="nav-item active" data-target="view-overview">
+                    <i class="fas fa-th-large"></i> <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-incidents">
+                    <i class="fas fa-exclamation-triangle"></i> <span>Incidents</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-noise">
+                    <i class="fas fa-filter"></i> <span>Noise Stream</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-runbooks">
+                    <i class="fas fa-book"></i> <span>Runbooks</span>
+                </a>
+                <a href="#" class="nav-item" data-target="view-settings">
+                    <i class="fas fa-sliders-h"></i> <span>Settings</span>
+                </a>
             </div>
-        </header>
+            <div class="sidebar-footer">
+                <div class="badge-noc">NOC ONLINE</div>
+                <button id="theme-toggle" class="btn theme-btn" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
 
-        <main class="dashboard-content">
-            <!-- Header Section -->
-            <div class="page-header">
-                <div class="page-title-row">
-                    <h1>Network Overview</h1>
-                    <span class="badge-live"><span class="dot"></span> LIVE</span>
+        <div class="main-wrapper">
+            <!-- Top Navbar -->
+            <header class="navbar">
+                <div class="nav-left">
+                    <h1 id="page-title">Network Overview</h1>
                 </div>
-                <p class="page-subtitle">Real-time incident intelligence & autonomous correlation</p>
-                <div class="page-meta">
-                    <span class="meta-item"><i class="far fa-clock"></i> Last 24 Hours</span>
-                    <span class="meta-item auto-sync"><i class="fas fa-sync-alt"></i> Auto-sync ON</span>
-                    <span class="meta-item code">AS-28491</span>
+                <div class="nav-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search devices, alerts...">
+                    </div>
+                    <div class="nav-toggle">
+                        <i class="fas fa-sync-alt"></i> 24h
+                    </div>
+                    <div class="nav-notification">
+                        <i class="far fa-bell nav-icon"></i>
+                        <span class="notification-dot"></span>
+                    </div>
+                    <div class="avatar">
+                        <i class="far fa-user"></i>
+                    </div>
                 </div>
-            </div>
+            </header>
 
-            <!-- Metrics Grid -->
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">TOTAL ALERTS</span>
-                        <i class="fas fa-satellite-dish text-muted"></i>
+            <main class="dashboard-content">
+                <!-- VIEW: OVERVIEW -->
+                <div id="view-overview" class="view-section active">
+                    <div class="page-header">
+                        <div class="page-title-row">
+                            <span class="badge-live"><span class="dot"></span> LIVE</span>
+                            <p class="page-subtitle">Real-time incident intelligence & autonomous correlation</p>
+                        </div>
+                        <div class="page-meta">
+                            <span class="meta-item"><i class="far fa-clock"></i> Last 24 Hours</span>
+                            <span class="meta-item auto-sync"><i class="fas fa-sync-alt"></i> Auto-sync ON</span>
+                            <span class="meta-item code">AS-28491</span>
+                        </div>
                     </div>
-                    <div class="metric-value-row">
-                        <span class="metric-val" id="stat-total">--</span>
-                        <span class="metric-trend up"><i class="fas fa-arrow-up"></i> 12%</span>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">TOTAL ALERTS</span>
+                                <i class="fas fa-satellite-dish text-muted"></i>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val" id="stat-total">--</span>
+                                <span class="metric-trend up"><i class="fas fa-arrow-up"></i> 12%</span>
+                            </div>
+                            <div class="sparkline-placeholder">
+                                <svg viewBox="0 0 100 20" preserveAspectRatio="none">
+                                    <path d="M0,15 L10,12 L20,18 L30,10 L40,14 L50,8 L60,10 L70,5 L80,12 L90,8 L100,2" fill="none" stroke="#a855f7" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">ACTIVE INCIDENTS</span>
+                                <i class="fas fa-layer-group text-muted"></i>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val" id="stat-active">--</span>
+                            </div>
+                            <div class="metric-footer">
+                                <span class="dot-purple"></span> TRIAGE ACTIVE
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">CRIT / HIGH</span>
+                                <i class="fas fa-exclamation-triangle text-critical"></i>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val text-critical" id="stat-crit">--</span>
+                                <span class="metric-subval">SEV-1/2</span>
+                            </div>
+                            <div class="metric-footer badge-action-req">
+                                <span class="dot-red"></span> ACTION REQ
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">NOISE SHUNTED</span>
+                                <i class="fas fa-cube text-success"></i>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val" id="stat-noise">--</span>
+                                <span class="metric-trend down"><i class="fas fa-arrow-down"></i> 16%</span>
+                            </div>
+                            <div class="metric-footer text-success">
+                                <i class="fas fa-shield-alt"></i> ISOLATED
+                            </div>
+                        </div>
                     </div>
-                    <div class="sparkline-placeholder">
-                        <svg viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M0,15 L10,12 L20,18 L30,10 L40,14 L50,8 L60,10 L70,5 L80,12 L90,8 L100,2" fill="none" stroke="#a855f7" stroke-width="2"/>
-                        </svg>
+
+                    <div class="pipeline-card">
+                        <div class="pipeline-header">
+                            <div class="pipeline-title"><i class="fas fa-project-diagram"></i> Telemetry Ingestion Pipeline</div>
+                            <div class="badge-deterministic">DETERMINISTIC</div>
+                        </div>
+                        <div class="pipeline-stages">
+                            <div class="stage">
+                                <div class="stage-val" id="pipe-in">--</div>
+                                <div class="stage-label">RAW IN</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                            <div class="stage box-engine">
+                                <i class="fas fa-asterisk"></i> CORRELATION ENGINE
+                            </div>
+                            <i class="fas fa-chevron-right text-muted"></i>
+                            <div class="stage">
+                                <div class="stage-val"><span id="pipe-inc" class="text-critical">--</span> <span class="text-muted">/</span> <span id="pipe-noise">--</span></div>
+                                <div class="stage-label">INC/NOISE</div>
+                            </div>
+                        </div>
+                        <div class="pipeline-footer">
+                            <span><span class="dot-success"></span> 99.98% Clustering Accuracy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: INCIDENTS -->
+                <div id="view-incidents" class="view-section">
+                    <div class="section-title-row">
+                        <div class="section-title">
+                            <h2>Active Incidents</h2>
+                            <div class="badge-requiring-action"><span id="req-action-count">0</span> REQUIRING ACTION</div>
+                        </div>
+                        <div class="section-subtitle">Triage Grid</div>
+                    </div>
+                    <div class="incidents-grid" id="incidents-container">
+                        <div class="empty-state">No incidents detected.</div>
+                    </div>
+                </div>
+
+                <!-- VIEW: NOISE -->
+                <div id="view-noise" class="view-section">
+                    <div class="noise-card" id="noise-section">
+                        <div class="noise-header">
+                            <h2>Noise & Unassigned Stream</h2>
+                            <span class="badge-isolated">ISOLATED</span>
+                        </div>
+                        <div class="noise-content">
+                            <div class="noise-icon-col">
+                                <i class="fas fa-shield-alt text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <div class="noise-text-col">
+                                <p class="noise-title" style="font-size: 1.2rem;"><span id="noise-count">0</span> alerts isolated from active crisis loops</p>
+                                <p class="noise-desc" style="font-size: 1rem; margin-top: 0.5rem;">
+                                    NexAlert enforces strict telemetry clustering. Unrelated heartbeat drops or routine flaps are safely quarantined, never forced into false-positive incident cascades.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="noise-footer mt-4">
+                            <span><i class="fas fa-eye-slash"></i> Zero incident dilution</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW: RUNBOOKS / SETTINGS Placeholder -->
+                <div id="view-runbooks" class="view-section">
+                    <div class="empty-state" style="margin-top: 10vh;">
+                        <i class="fas fa-book-open" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                        <h2>Runbook Library</h2>
+                        <p class="text-muted">Manage automated response procedures and escalation paths.</p>
                     </div>
                 </div>
                 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">ACTIVE</span>
-                        <i class="fas fa-layer-group text-muted"></i>
-                    </div>
-                    <div class="metric-value-row">
-                        <span class="metric-val" id="stat-active">--</span>
-                    </div>
-                    <div class="metric-footer">
-                        <span class="dot-purple"></span> TRIAGE ACTIVE
+                <div id="view-settings" class="view-section">
+                    <div class="empty-state" style="margin-top: 10vh;">
+                        <i class="fas fa-cogs" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h2>System Settings</h2>
+                        <p class="text-muted">Configure clustering thresholds, AI model parameters, and API keys.</p>
                     </div>
                 </div>
 
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">CRIT / HIGH</span>
-                        <i class="fas fa-exclamation-triangle text-critical"></i>
-                    </div>
-                    <div class="metric-value-row">
-                        <span class="metric-val text-critical" id="stat-crit">--</span>
-                        <span class="metric-subval">SEV-1/2</span>
-                    </div>
-                    <div class="metric-footer badge-action-req">
-                        <span class="dot-red"></span> ACTION REQ
-                    </div>
-                </div>
-
-                <div class="metric-card">
-                    <div class="metric-header">
-                        <span class="metric-title">NOISE SHUNTED</span>
-                        <i class="fas fa-cube text-success"></i>
-                    </div>
-                    <div class="metric-value-row">
-                        <span class="metric-val" id="stat-noise">--</span>
-                        <span class="metric-trend down"><i class="fas fa-arrow-down"></i> 16%</span>
-                    </div>
-                    <div class="metric-footer text-success">
-                        <i class="fas fa-shield-alt"></i> ISOLATED
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pipeline Visualizer -->
-            <div class="pipeline-card">
-                <div class="pipeline-header">
-                    <div class="pipeline-title"><i class="fas fa-project-diagram"></i> Telemetry Ingestion Pipeline</div>
-                    <div class="badge-deterministic">DETERMINISTIC</div>
-                </div>
-                <div class="pipeline-stages">
-                    <div class="stage">
-                        <div class="stage-val" id="pipe-in">--</div>
-                        <div class="stage-label">RAW IN</div>
-                    </div>
-                    <i class="fas fa-chevron-right text-muted"></i>
-                    <div class="stage box-engine">
-                        <i class="fas fa-asterisk"></i> ENGINE
-                    </div>
-                    <i class="fas fa-chevron-right text-muted"></i>
-                    <div class="stage">
-                        <div class="stage-val"><span id="pipe-inc" class="text-critical">--</span> <span class="text-muted">/</span> <span id="pipe-noise">--</span></div>
-                        <div class="stage-label">INC/NOISE</div>
-                    </div>
-                </div>
-                <div class="pipeline-footer">
-                    <span><span class="dot-success"></span> 99.98% Clustering Accuracy</span>
-                    <span class="text-muted" style="cursor:pointer">Specs &rarr;</span>
-                </div>
-            </div>
-
-            <!-- Active Incidents -->
-            <div class="section-title-row mt-4">
-                <div class="section-title">
-                    <h2>Active<br>Incidents</h2>
-                    <div class="badge-requiring-action"><span id="req-action-count">0</span> REQUIRING ACTION</div>
-                </div>
-                <div class="section-subtitle">Triage<br>Grid</div>
-            </div>
-
-            <div class="incidents-list" id="incidents-container">
-                <!-- Injected via JS -->
-                <div class="empty-state">No incidents detected.</div>
-            </div>
-
-            <!-- Noise Stream -->
-            <div class="noise-card mt-4" id="noise-section" style="display:none;">
-                <div class="noise-header">
-                    <h3>Noise & Unassigned Stream</h3>
-                    <span class="badge-isolated">ISOLATED</span>
-                </div>
-                <div class="noise-content">
-                    <div class="noise-icon-col">
-                        <i class="fas fa-shield-alt text-success"></i>
-                    </div>
-                    <div class="noise-text-col">
-                        <p class="noise-title"><span id="noise-count">0</span> alerts isolated from active crisis loops</p>
-                        <p class="noise-desc">
-                            NexAlert enforces strict telemetry clustering. Unrelated heartbeat drops or routine flaps are safely quarantined, never forced into false-positive incident cascades.
-                        </p>
-                    </div>
-                </div>
-                <div class="noise-footer">
-                    <span><i class="fas fa-eye-slash"></i> Zero incident dilution</span>
-                    <button class="btn-noise">View Noise Stream (<span id="btn-noise-count">0</span>) <i class="fas fa-sliders-h"></i></button>
-                </div>
-            </div>
-
-            <!-- Bottom Status Bar -->
-            <div class="bottom-status-bar">
-                <span><span class="dot-success"></span> Telemetry Sync: 12ms latency</span>
-                <span class="text-muted">Node: US-EAST-EDGE-09</span>
-            </div>
-        </main>
-
-        <!-- Bottom Navigation (Mobile/App feel) -->
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active">
-                <i class="fas fa-th-large"></i>
-                <span>Overview</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Incidents</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-filter"></i>
-                <span>Noise</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-arrow-up"></i>
-                <span>Escalate</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-book"></i>
-                <span>Runbooks</span>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-sliders-h"></i>
-                <span>Settings</span>
-            </a>
-        </nav>
+            </main>
+        </div>
     </div>
 
     <!-- Template for Incident Card -->
@@ -247,13 +261,11 @@
                 <div class="runbook-link">
                     <i class="fas fa-book-open"></i> <span class="runbook-name">Runbook #NET-409</span>
                 </div>
-                <button class="btn-investigate">Investigate Incident &rarr;</button>
+                <button class="btn-investigate">Investigate &rarr;</button>
             </div>
-            
-            <!-- Escalation variation logic handled in JS -->
         </div>
     </template>
 
-    <script src="/static/app.js?v=2"></script>
+    <script src="/static/app.js?v=3"></script>
 </body>
 </html>
