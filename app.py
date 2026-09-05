@@ -96,37 +96,34 @@ def search_runbook(query_text: str) -> Optional[Dict]:
             return runbooks_db[match_idx]
     return None
 
+import concurrent.futures
+
 def generate_insights(incident_alerts: List[Alert], runbook: Optional[Dict]) -> tuple[str, str]:
     if not client:
         return "[Insights unavailable: API Key missing or invalid]", "[Recommendation unavailable]"
+
+    def call_gemini(prompt: str) -> str:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(client.models.generate_content, model='gemini-3.6-flash', contents=prompt)
+            return future.result(timeout=7).text.strip()
 
     # Generate Explanation
     alert_details = "\\n".join([f"- {a.alert_type} on {a.device_id}: {a.message}" for a in incident_alerts])
     explanation_prompt = f"Explain in 1-2 sentences why these overlapping alerts were grouped into one incident:\\n{alert_details}"
     
-    explanation = "[Explanation unavailable: model call failed]"
+    explanation = "[Explanation unavailable: model call timed out or failed]"
     try:
-        explanation_resp = client.models.generate_content(
-            model='gemini-3.6-flash',
-            contents=explanation_prompt
-        )
-        if explanation_resp.text:
-            explanation = explanation_resp.text.strip()
+        explanation = call_gemini(explanation_prompt)
     except Exception as e:
         print(f"Gemini Explanation Error: {e}")
 
     # Generate Recommendation
     recommendation = None
     if runbook:
-        recommendation = "[Recommendation unavailable: model call failed]"
+        recommendation = "[Recommendation unavailable: model call timed out or failed]"
         rec_prompt = f"Based strictly on this runbook content, provide a short, plain-language recommendation for the user. Do not invent steps.\\nRunbook: {runbook['content']}"
         try:
-            rec_resp = client.models.generate_content(
-                model='gemini-3.6-flash',
-                contents=rec_prompt
-            )
-            if rec_resp.text:
-                recommendation = rec_resp.text.strip()
+            recommendation = call_gemini(rec_prompt)
         except Exception as e:
             print(f"Gemini Recommendation Error: {e}")
 
