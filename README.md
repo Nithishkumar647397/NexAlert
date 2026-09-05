@@ -2,22 +2,29 @@ TRACK_ID=PS07
 
 # NexAlert
 
-NexAlert is a Telecom Network Incident Triage Assistant that groups overlapping alerts, prioritizes them, and retrieves relevant runbooks to recommend actions. 
+NexAlert is a Telecom Network Incident Triage Assistant that uses AI and RAG to intelligently group overlapping network alerts, prioritize incidents, and retrieve the correct troubleshooting runbook automatically. If no matching runbook exists, the incident is safely escalated with assembled context without fabricating a response.
 
-## Running the Application
+## How to Run
 
-1. Ensure Python 3.9+ is installed.
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Export your Gemini API key:
-   ```bash
-   # On Windows PowerShell
-   $env:GEMINI_API_KEY="your-api-key"
-   ```
-4. Run the application:
+2. Configure the environment:
+   Copy `.env.example` to `.env` and add your real `GEMINI_API_KEY`.
+3. Start the application:
    ```bash
    python app.py
    ```
-5. Open your browser and navigate to `http://localhost:8000`.
+   The dashboard will be available at `http://localhost:8000`.
+
+## Dataset Overview
+
+The included `data/alerts.json` and `data/runbooks.json` simulate a real-world telecom failure scenario:
+- **3 deliberate incident clusters:** Related alerts (e.g., link down + unreachable) are grouped into single incidents.
+- **Noise:** Unrelated single alerts that do not form an incident.
+- **1 deliberate escalation case:** An unknown anomaly (firewall traffic deviation) that correctly fails the L2 similarity threshold (0.6) and is escalated since it does not map to any known runbook.
+
+## Demo Video
+
+[demo video link here]
