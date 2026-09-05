@@ -33,26 +33,42 @@
   },
   {
     "alert_id": "a5",
-    "device_id": "switch-edge-sf-02",
-    "alert_type": "queue_drops",
-    "severity": "warning",
-    "timestamp": "2026-09-05T09:45:02Z",
-    "message": "Tail drops observed on egress queue 3."
+    "device_id": "vpn-server-east",
+    "alert_type": "auth_failure",
+    "severity": "critical",
+    "timestamp": "2026-09-05T09:46:00Z",
+    "message": "Burst of 500 authentication failures in 10 seconds."
   },
   {
     "alert_id": "a6",
+    "device_id": "vpn-server-east",
+    "alert_type": "radius_timeout",
+    "severity": "error",
+    "timestamp": "2026-09-05T09:46:05Z",
+    "message": "RADIUS server timeout during authentication."
+  },
+  {
+    "alert_id": "a7",
+    "device_id": "firewall-dmz-01",
+    "alert_type": "unknown_anomaly",
+    "severity": "critical",
+    "timestamp": "2026-09-05T09:51:00Z",
+    "message": "Unusual protocol behavior detected on port 8080."
+  },
+  {
+    "alert_id": "a8",
+    "device_id": "firewall-dmz-01",
+    "alert_type": "unexpected_traffic",
+    "severity": "error",
+    "timestamp": "2026-09-05T09:51:05Z",
+    "message": "Traffic pattern deviation: +400% volume."
+  },
+  {
+    "alert_id": "a9",
     "device_id": "loadbalancer-01",
     "alert_type": "high_cpu",
     "severity": "warning",
     "timestamp": "2026-09-05T09:50:00Z",
     "message": "CPU usage spiked to 85% for 1 minute."
-  },
-  {
-    "alert_id": "a7",
-    "device_id": "firewall-dmz-01",
-    "alert_type": "unknown_error",
-    "severity": "error",
-    "timestamp": "2026-09-05T09:51:00Z",
-    "message": "Unidentified process crash."
   }
 ]

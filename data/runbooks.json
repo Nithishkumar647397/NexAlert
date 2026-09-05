@@ -16,5 +16,11 @@
     "title": "BGP Peer Flapping",
     "content": "If a BGP peer is rapidly flapping, check the MTU size on the interface and ensure it matches the peer. Verify if there are any intermediate Layer 2 transport issues causing keepalive drops. Consider increasing the hold-time temporarily if transport is known to be unstable during maintenance.",
     "tags": ["bgp", "flapping", "routing"]
+  },
+  {
+    "id": "rb-004",
+    "title": "Authentication Failure Burst",
+    "content": "A sudden burst of authentication failures on a VPN concentrator or RADIUS server usually indicates either a credential stuffing attack, a misconfigured client rolling out, or an expired backend certificate. Verify if the failures are from a single source IP or distributed. If single IP, temporarily block at the edge. If distributed, check backend Active Directory/LDAP connectivity.",
+    "tags": ["auth", "vpn", "radius", "security"]
   }
 ]
