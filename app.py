@@ -176,7 +176,7 @@ async def triage_alerts(req: TriageRequest):
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
-    with open("static/index.html", "r") as f:
+    with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
 if __name__ == "__main__":
