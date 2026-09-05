@@ -394,6 +394,16 @@ body {
 .badge-isolated { background: var(--bg-nav); color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.75rem; padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid var(--border-subtle); }
 .noise-content { display: flex; gap: 1.5rem; }
 
+/* Settings & Runbooks styling */
+.settings-panel { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-subtle); }
+.settings-panel h3 { font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; }
+.setting-item { margin-bottom: 1rem; }
+.setting-item label { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.settings-input { width: 100%; background: var(--bg-nav); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 0.75rem; border-radius: 8px; font-family: var(--font-mono); }
+.settings-input:focus { outline: none; border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-primary:hover { background: var(--accent-light); }
+
 /* Utils */
 .dot, .dot-success, .dot-red, .dot-purple, .dot-white { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
 .dot { background: currentColor; }
