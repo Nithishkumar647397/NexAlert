@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Main action
-    btnSimulate.addEventListener('click', async () => {
+    const runTriage = async () => {
         btnSimulate.disabled = true;
         btnSimulate.innerHTML = '<span class="loader"></span> Triaging...';
         
@@ -90,14 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         incidentsContainer.innerHTML = '';
         
         try {
-            // 1. Fetch mock alerts directly from the data folder 
-            // In a real app this might come from a backend endpoint, but here we can just fetch the static json
-            // Wait, data/ is not mounted as static. We need to fetch it from backend or mount it.
-            // Actually, we can't fetch `../data/alerts.json` directly if it's not served.
-            // Let's modify app.py to serve `/data` or create an endpoint, OR just hardcode it here.
-            // Wait, since we are fetching from `/api/triage`, we need to send the alerts TO it.
-            // Let's just fetch it by adding an endpoint in app.py, or mounting /data.
-            // I'll update app.py to mount /data.
             const response = await fetch('/data/alerts.json');
             if (!response.ok) throw new Error("Could not fetch alerts.json");
             mockAlerts = await response.json();
@@ -128,5 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSimulate.disabled = false;
             btnSimulate.textContent = 'Simulate Alert Storm';
         }
-    });
+    };
+
+    btnSimulate.addEventListener('click', runTriage);
+    
+    // Automatically run on startup
+    runTriage();
 });
