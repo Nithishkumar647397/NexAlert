@@ -1,5 +1,56 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // We auto-run triage
+
+    // --- View Navigation Logic ---
+    const navItems = document.querySelectorAll('.nav-item');
+    const viewSections = document.querySelectorAll('.view-section');
+    const pageTitle = document.getElementById('page-title');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Remove active from all nav items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            // Add active to clicked nav item
+            item.classList.add('active');
+
+            // Hide all views
+            viewSections.forEach(view => view.classList.remove('active'));
+            
+            // Show target view
+            const targetId = item.getAttribute('data-target');
+            const targetView = document.getElementById(targetId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            // Update page title
+            pageTitle.textContent = item.querySelector('span').textContent;
+        });
+    });
+
+    // --- Theme Toggle Logic ---
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            
+            // Update icon
+            const icon = themeBtn.querySelector('i');
+            if (next === 'light') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+    }
+
+    // --- Triage Data Fetching ---
     const runTriage = async () => {
         try {
             const response = await fetch('/data/alerts.json');
@@ -42,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tpl = document.getElementById('tpl-incident').content.cloneNode(true);
                 const card = tpl.querySelector('.incident-card');
                 
-                card.style.animationDelay = `${i * 150}ms`;
+                card.style.animationDelay = `${i * 100}ms`;
                 
                 let severityText = 'MEDIUM';
                 let sevClass = 'sev-medium';
@@ -60,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Format time using first alert
                 const d = new Date(inc.alerts[0].timestamp);
-                tpl.querySelector('.time-text').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' AM'; // Mock AM/PM for aesthetic
+                tpl.querySelector('.time-text').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' AM';
                 
                 // Set Title
                 if (inc.runbook_title) {
@@ -70,16 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Set Desc
-                tpl.querySelector('.incident-desc').textContent = inc.explanation.substring(0, 80) + '...';
+                tpl.querySelector('.incident-desc').textContent = inc.explanation.substring(0, 120) + (inc.explanation.length > 120 ? '...' : '');
                 
                 tpl.querySelector('.corr-count').textContent = inc.alerts.length;
                 
-                const actionContainer = tpl.querySelector('.incident-actions');
-                
                 if (inc.escalate) {
-                    // It's escalated
                     tpl.querySelector('.status-val').innerHTML = '<span class="dot-red"></span> Escalated';
-                    tpl.querySelector('.runbook-name').textContent = 'No Runbook - Escalated';
+                    tpl.querySelector('.runbook-name').textContent = 'No Runbook - Escalate';
                     tpl.querySelector('.runbook-link').style.color = '#ef4444';
                 } else {
                     tpl.querySelector('.runbook-name').textContent = `Runbook ${inc.runbook_id || '#NET-000'}`;
@@ -90,9 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Noise section
             if (noise.length > 0) {
-                document.getElementById('noise-section').style.display = 'block';
                 document.getElementById('noise-count').textContent = noise.length;
-                document.getElementById('btn-noise-count').textContent = noise.length;
             }
 
         } catch (error) {
